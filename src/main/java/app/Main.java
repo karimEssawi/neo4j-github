@@ -22,7 +22,7 @@ public class Main {
                                         .then(json -> ctx.getResponse().send("application/json", json));
                             }).get("graph", ctx -> {
                                 ctx.get(GraphService.class)
-                                        .graph(Integer.parseInt(Optional.ofNullable(ctx.getRequest().getQueryParams().get("limit")).orElse("10")))
+                                        .graph(Integer.parseInt(Optional.ofNullable(ctx.getRequest().getQueryParams().get("limit")).orElse("10")), ctx)
                                         .onError(Throwable::printStackTrace)
                                         .map(r -> ctx.get(ObjectMapper.class).writeValueAsString(r))
                                         .then(json -> ctx.getResponse().send("application/json", json));
