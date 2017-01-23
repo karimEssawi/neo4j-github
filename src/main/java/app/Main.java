@@ -2,6 +2,7 @@ package app;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import ratpack.guice.Guice;
+import ratpack.rx.RxRatpack;
 import ratpack.server.BaseDir;
 import ratpack.server.RatpackServer;
 
@@ -9,6 +10,7 @@ import java.util.Optional;
 
 public class Main {
     public static void main(String... args) throws Exception {
+        RxRatpack.initialize();
         RatpackServer
                 .start(server ->
                     server.serverConfig(c -> c.baseDir(BaseDir.find()))
@@ -22,7 +24,7 @@ public class Main {
                                         .then(json -> ctx.getResponse().send("application/json", json));
                             }).get("graph", ctx -> {
                                 ctx.get(GraphService.class)
-                                        .graph(Integer.parseInt(Optional.ofNullable(ctx.getRequest().getQueryParams().get("limit")).orElse("10")), ctx)
+                                        .graph(Integer.parseInt(Optional.ofNullable(ctx.getRequest().getQueryParams().get("limit")).orElse("10")))
                                         .onError(Throwable::printStackTrace)
                                         .map(r -> ctx.get(ObjectMapper.class).writeValueAsString(r))
                                         .then(json -> ctx.getResponse().send("application/json", json));
